@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  NaverMapPractice
 //
-//  Created by 정채은 on 12/23/23.
+//  Created by 정채은 on 12/26/23.
 //
 
 import UIKit
@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = ViewController()
+        window.rootViewController = MapViewController()
         window.makeKeyAndVisible()
         self.window = window
     }

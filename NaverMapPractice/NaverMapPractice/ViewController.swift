@@ -2,10 +2,12 @@
 //  ViewController.swift
 //  NaverMapPractice
 //
-//  Created by 정채은 on 12/23/23.
+//  Created by 정채은 on 12/26/23.
 //
 
 import UIKit
+
+import NMapsMap
 
 class ViewController: UIViewController {
 
