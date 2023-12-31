@@ -14,13 +14,31 @@ import Then
 
 class MapViewController: UIViewController {
     
-    var nowLat: Double = 37.3
-    var nowLng: Double = 127.1
+    typealias Marker = [Double: Double]
+    
+    let markerDummy: Marker = [37.56299678698725: 126.8469346126135,
+                               37.57299678698725: 126.8569346126135,
+                               37.58299678698725: 126.8669346126135,
+                               37.59299678698725: 126.8769346126135,
+                               37.60299678698725: 126.8669346126135,
+                               37.61299678698725: 126.8369346126135,
+                               37.62299678698725: 126.8469346126135,
+                               37.63299678698725: 126.8769346126135]
+
+    
+    var nowLat: Double = 37.56299678698725
+    var nowLng: Double = 126.8469346126135
+    
     let titleLabel = UILabel()
     let mapsView = NMFNaverMapView()
+    
     var locationManager = CLLocationManager()
     lazy var cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: self.nowLat, lng: self.nowLng))
+    
     let locationButton = NMFLocationButton()
+    
+    let marker = NMFMarker()
+    let infoWindow = NMFInfoWindow()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +49,7 @@ class MapViewController: UIViewController {
     private func setUI() {
         setStyle()
         setLayout()
+        setMarker()
     }
     
     private func setStyle() {
@@ -41,13 +60,24 @@ class MapViewController: UIViewController {
         }
         
         mapsView.do {
-//            $0.showLocationButton = false
-            $0.mapView.positionMode = .compass
+            $0.mapView.positionMode = .direction
             $0.mapView.isNightModeEnabled = true
             $0.mapView.mapType = .navi
             $0.mapView.moveCamera(cameraUpdate)
             $0.showScaleBar = false
             $0.showZoomControls = false
+            $0.showCompass = false
+            
+            let locationOverlay = $0.mapView.locationOverlay
+            locationOverlay.hidden = false
+//            locationOverlay.icon = NMFOverlayImage(image: UIImage(named: "myLocation") ?? UIImage())
+            
+            locationOverlay.circleColor = .red
+            locationOverlay.circleRadius = 20
+            locationOverlay.circleOutlineColor = .red
+            locationOverlay.circleOutlineColor.withAlphaComponent(0.3)
+            locationOverlay.circleOutlineWidth = 3
+
         }
         
         locationButton.do {
@@ -62,6 +92,13 @@ class MapViewController: UIViewController {
         cameraUpdate.do {
             $0.animation = .easeIn
         }
+        
+//        marker.do {
+//            $0.position = NMGLatLng(lat: 37.56299678698725, lng: 126.8499346126135)
+//            $0.mapView = mapsView.mapView
+//            $0.width = 32
+//            $0.height = 32
+//        }
     }
     
     
@@ -104,6 +141,14 @@ class MapViewController: UIViewController {
             } else {
                 print("위치 서비스 허용 off")
             }
+        }
+    }
+    
+    private func setMarker() {
+        markerDummy.forEach {
+            let marker = NMFMarker()
+            marker.position = NMGLatLng(lat: $0, lng: $1)
+            marker.mapView = mapsView.mapView
         }
     }
 }

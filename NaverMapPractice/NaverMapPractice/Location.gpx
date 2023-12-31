@@ -6,7 +6,7 @@
      waypoint, Xcode will simulate that specific location. If you provide multiple waypoints,
      Xcode will simulate a route visiting each waypoint.
      -->
-    <wpt lat="37.3" lon="127">
+    <wpt lat="37.56299678698725" lon="126.8469346126135">
         <name>Manseok</name>
         
         <!--
