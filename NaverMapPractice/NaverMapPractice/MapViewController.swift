@@ -14,9 +14,13 @@ import Then
 
 class MapViewController: UIViewController {
     
+    var nowLat: Double = 37.3
+    var nowLng: Double = 127.1
+    let titleLabel = UILabel()
     let mapsView = NMFNaverMapView()
     var locationManager = CLLocationManager()
-    let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: 37.3, lng: 127.1))
+    lazy var cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: self.nowLat, lng: self.nowLng))
+    let locationButton = NMFLocationButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +34,29 @@ class MapViewController: UIViewController {
     }
     
     private func setStyle() {
+        titleLabel.do {
+            $0.text = "서울특별시 강서구"
+            $0.textColor = .white
+            $0.font = .boldSystemFont(ofSize: 20)
+        }
+        
         mapsView.do {
-            $0.showLocationButton = true
+//            $0.showLocationButton = false
             $0.mapView.positionMode = .compass
             $0.mapView.isNightModeEnabled = true
             $0.mapView.mapType = .navi
             $0.mapView.moveCamera(cameraUpdate)
+            $0.showScaleBar = false
+            $0.showZoomControls = false
+        }
+        
+        locationButton.do {
+            // 수정 필요
+            $0.backgroundColor = .white
+            $0.mapView = mapsView.mapView
+            $0.layer.cornerRadius = 25
+            $0.clipsToBounds = true
+            $0.layer.masksToBounds = true
         }
         
         cameraUpdate.do {
@@ -46,8 +67,22 @@ class MapViewController: UIViewController {
     
     private func setLayout() {
         view.addSubview(mapsView)
+        view.addSubview(titleLabel)
+        mapsView.addSubview(locationButton)
+        
+        titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(70)
+            $0.leading.equalToSuperview().inset(20)
+        }
+        
         mapsView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+        
+        locationButton.snp.makeConstraints {
+            $0.width.height.equalTo(50)
+            $0.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(82)
         }
     }
     
@@ -77,6 +112,9 @@ extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             print("위치 업데이트!")
+            nowLat = location.coordinate.latitude
+            nowLng = location.coordinate.longitude
+            self.mapsView.mapView.moveCamera(cameraUpdate)
             print("위도 : \(location.coordinate.latitude)")
             print("경도 : \(location.coordinate.longitude)")
         }
