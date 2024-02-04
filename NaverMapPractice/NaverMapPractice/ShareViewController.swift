@@ -18,6 +18,7 @@ final class ShareViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .white
         
         copyLabel.do {
             $0.text = "chaentopia"
@@ -27,11 +28,13 @@ final class ShareViewController: UIViewController {
         copyButton.do {
             $0.setImage(UIImage(systemName: "doc.on.doc"), for: .normal)
             $0.tintColor = .black
+            $0.addTarget(self, action: #selector(copyButtonTapped), for: .touchUpInside)
         }
         
         shareButton.do {
             $0.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
             $0.tintColor = .black
+            $0.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         }
         
         self.view.addSubview(copyLabel)
@@ -53,5 +56,14 @@ final class ShareViewController: UIViewController {
             $0.top.equalTo(copyButton.snp.bottom).offset(20)
             $0.size.equalTo(20)
         }
+    }
+    
+    @objc func copyButtonTapped() {
+        UIPasteboard.general.string = copyLabel.text
+        view.showToast(message: "아이디가 복사되었습니다", at: 50)
+    }
+    
+    @objc func shareButtonTapped() {
+        
     }
 }
